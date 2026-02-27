@@ -29,6 +29,7 @@ using glm::vec4;
 SceneBasic_Uniform::SceneBasic_Uniform() : plane (10.0f, 10.0f, 100, 100) {
 
     mesh = ObjMesh::load("media/pig_triangulated.obj", true);
+    mesh2 = ObjMesh::load("media/eyeball.obj", true);
 }
 
 void SceneBasic_Uniform::initScene()
@@ -98,6 +99,13 @@ void SceneBasic_Uniform::render()
     setMatrices();
     mesh->render();
 
+    //for eye
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(1.5f, 0.0f, 0.0f));
+    model = glm::scale(model, vec3(0.2f));
+    setMatrices();
+    mesh2->render();
+
 
     prog.setUniform("Kd", 0.4f, 0.4f, 0.4f);
     prog.setUniform("Ks", 0.9f, 0.9f, 0.9f);
@@ -109,6 +117,8 @@ void SceneBasic_Uniform::render()
     model = glm::translate(model, vec3(0.0f, -0.45f, 0.0f));
     setMatrices();
     plane.render();
+
+   
 }
 
 void SceneBasic_Uniform::setMatrices() 

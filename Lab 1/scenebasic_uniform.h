@@ -25,6 +25,7 @@ private:
     //lab3 plane and objmesh
     Plane plane; //plane surface
     std::unique_ptr<ObjMesh>mesh; //pig mesh
+    std::unique_ptr<ObjMesh>mesh2; //for eye
 
     GLSLProgram prog;
 
