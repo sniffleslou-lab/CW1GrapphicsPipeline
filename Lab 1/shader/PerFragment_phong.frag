@@ -22,6 +22,11 @@ uniform int UseTexture;
 uniform sampler2D Tex;
 in vec2 TexCoord;
 
+//fog
+uniform vec3 FogColor;
+uniform float FogStart;
+uniform float FogEnd;
+
 vec3 phongModel(vec3 position, vec3 n)
 {
     vec3 s = normalize(LightPosition - position);
@@ -53,7 +58,13 @@ void main()
 
     vec3 baseColor = (UseTexture == 1) ? texColor : Kd;
 
+    //fog
+    float dist = length(Position);
+    float fogFactor = clamp((dist - FogStart) / (FogEnd - FogStart), 0.0, 1.0);
 
+    //FragColor = vec4(baseColor * lighting, 1.0);
 
-    FragColor = vec4(baseColor * lighting, 1.0);
+    vec3 litColor = baseColor * lighting;
+    vec3 finalColor = mix(litColor, FogColor, fogFactor);
+    FragColor = vec4(finalColor, 1.0);
 }

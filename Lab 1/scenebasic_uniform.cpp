@@ -58,6 +58,10 @@ void SceneBasic_Uniform::initScene()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    //fog
+    prog.setUniform("FogColor", vec3(0.7f, 0.7f, 0.8f)); // should be greylish blue
+    prog.setUniform("FogStart", 0.5f);
+    prog.setUniform("FogEnd", 3.0f);
 
     //set the camera and the 3 lights 
     view = glm::lookAt(vec3(3.6f, 0.75f, 0.75f),
