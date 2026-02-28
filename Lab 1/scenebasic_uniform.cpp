@@ -1,5 +1,8 @@
 #include "scenebasic_uniform.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "helper/stb/stb_image.h"
+
 #include <cstdio>
 #include <cstdlib>
 
@@ -23,6 +26,8 @@ using glm::vec4;
 
 #include <glm/gtc/constants.hpp>
 
+//image
+
 
 //below used to be angl(0.0f)
 
@@ -36,8 +41,24 @@ void SceneBasic_Uniform::initScene()
 {
     compile();
 
+ 
    
     glEnable(GL_DEPTH_TEST);
+    //texture 
+    int width, height, channels;
+    unsigned char* data = stbi_load("media/brat-album-font.png", &width, &height, &channels, 4);
+    glGenTextures(1, &eyeballTex);
+    glBindTexture(GL_TEXTURE_2D, eyeballTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, 
+                 GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    //textures
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
     //set the camera and the 3 lights 
     view = glm::lookAt(vec3(3.6f, 0.75f, 0.75f),
         vec3(0.0f, 0.1f, 0.0f),
@@ -88,18 +109,31 @@ void SceneBasic_Uniform::render()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    prog.setUniform("UseTexture", 0);
+
     prog.setUniform("Kd", 1.0f, 0.6f, 0.7f);
     prog.setUniform("Ks", 1.0f, 1.0f, 1.0f);
     prog.setUniform("Ka", 0.6f, 0.3f, 0.4f);
     prog.setUniform("Shininess", 200.0f);
 
-
+    
     model = mat4(1.0f);
     model = glm::rotate(model, glm::radians(90.0f), vec3(0.0f, 1.0f, 0.0f));
     setMatrices();
     mesh->render();
 
     //for eye
+    prog.setUniform("UseTexture", 1);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, eyeballTex);
+    prog.setUniform("Tex", 0);
+
+    ///material for eyeball
+
+    prog.setUniform("Kd", 1.0f, 1.0f, 1.0f);
+    prog.setUniform("Ks", 0.2f, 0.2f, 0.2f);
+    prog.setUniform("Ka", 0.3f, 0.3f, 0.3f);
+    prog.setUniform("Shininess", 50.0f);
     model = mat4(1.0f);
     model = glm::translate(model, vec3(1.5f, 0.0f, 0.0f));
     model = glm::scale(model, vec3(0.2f));
@@ -111,6 +145,7 @@ void SceneBasic_Uniform::render()
     prog.setUniform("Ks", 0.9f, 0.9f, 0.9f);
     prog.setUniform("Ka", 0.5f, 0.5f, 0.5f);
     prog.setUniform("Shininess", 180.0f);
+    prog.setUniform("UseTexture", 0);
 
 
     model = mat4(1.0f);

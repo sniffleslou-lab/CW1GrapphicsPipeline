@@ -17,7 +17,11 @@ uniform vec3 Kd;              // diffuse reflectivity
 uniform vec3 Ks;              // specular reflectivity
 uniform float Shininess;
 
-// ---- Per-fragment Phong model ----
+///for textures
+uniform int UseTexture;
+uniform sampler2D Tex;
+in vec2 TexCoord;
+
 vec3 phongModel(vec3 position, vec3 n)
 {
     vec3 s = normalize(LightPosition - position);
@@ -43,6 +47,13 @@ vec3 phongModel(vec3 position, vec3 n)
 void main()
 {
     vec3 n = normalize(Normal);
-    vec3 color = phongModel(Position, n);
-    FragColor = vec4(color, 1.0);
+    vec3 texColor = texture(Tex, TexCoord).rgb;
+
+    vec3 lighting = phongModel(Position, n);
+
+    vec3 baseColor = (UseTexture == 1) ? texColor : Kd;
+
+
+
+    FragColor = vec4(baseColor * lighting, 1.0);
 }

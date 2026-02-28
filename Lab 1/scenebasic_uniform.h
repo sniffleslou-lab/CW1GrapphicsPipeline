@@ -22,6 +22,9 @@ private:
     //GLuint vaoHandle; LAB1 LINE
    // Torus torus; 
 
+    //texture
+    GLuint eyeballTex;
+
     //lab3 plane and objmesh
     Plane plane; //plane surface
     std::unique_ptr<ObjMesh>mesh; //pig mesh
@@ -38,6 +41,8 @@ private:
     //glm::mat4 rotationMatrix;LAB1 LINE
 
 
+
+
     void compile();
 
 public:
@@ -49,6 +54,7 @@ public:
     void resize(int, int);
 
     void setMatrices();//lab2 
+
 };
 
 #endif // SCENEBASIC_UNIFORM_H
