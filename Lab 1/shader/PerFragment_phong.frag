@@ -58,13 +58,17 @@ void main()
 
     vec3 baseColor = (UseTexture == 1) ? texColor : Kd;
 
+    //toon shading 
+    float levels = 4.0;
+    vec3 toonLighting = floor(lighting * levels) / levels;
+    vec3 litColor = baseColor * toonLighting;
+
     //fog
     float dist = length(Position);
     float fogFactor = clamp((dist - FogStart) / (FogEnd - FogStart), 0.0, 1.0);
 
     //FragColor = vec4(baseColor * lighting, 1.0);
 
-    vec3 litColor = baseColor * lighting;
     vec3 finalColor = mix(litColor, FogColor, fogFactor);
-    FragColor = vec4(finalColor, 1.0);
+    FragColor = vec4(pow(finalColor, vec3(1.0/2.2)), 1.0); //gamma
 }

@@ -60,8 +60,8 @@ void SceneBasic_Uniform::initScene()
 
     //fog
     prog.setUniform("FogColor", vec3(0.7f, 0.7f, 0.8f)); // should be greylish blue
-    prog.setUniform("FogStart", 0.5f);
-    prog.setUniform("FogEnd", 3.0f);
+    prog.setUniform("FogStart", 2.0f);//0.5 for strong | weaker = 2
+    prog.setUniform("FogEnd", 12.0f);// 3.0 for strong | weaker = 12
 
 
     //cube 
@@ -87,7 +87,6 @@ void SceneBasic_Uniform::initScene()
     prog.setUniform("LightLa", vec3(0.2f));
     prog.setUniform("LightLd", vec3(0.8f));
     prog.setUniform("LightLs", vec3(0.8f));
-    // specular
 
   
 }
