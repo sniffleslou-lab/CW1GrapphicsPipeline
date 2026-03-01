@@ -23,6 +23,7 @@ using std::endl;
 using glm::vec3;
 using glm::mat4; //lab2
 using glm::vec4;
+using glm::mat3;
 
 #include <glm/gtc/constants.hpp>
 
@@ -31,7 +32,7 @@ using glm::vec4;
 
 //below used to be angl(0.0f)
 
-SceneBasic_Uniform::SceneBasic_Uniform() : plane (10.0f, 10.0f, 100, 100) {
+SceneBasic_Uniform::SceneBasic_Uniform() : plane (10.0f, 10.0f, 100, 100), angle(0.0f), tPrev(0.0f), rotSpeed(glm::radians(10.0f)) {
 
     mesh = ObjMesh::load("media/pig_triangulated.obj", true);
     mesh2 = ObjMesh::load("media/eyeball.obj", true);
@@ -40,10 +41,9 @@ SceneBasic_Uniform::SceneBasic_Uniform() : plane (10.0f, 10.0f, 100, 100) {
 void SceneBasic_Uniform::initScene()
 {
     compile();
-
- 
-   
     glEnable(GL_DEPTH_TEST);
+ 
+
     //texture 
     int width, height, channels;
     unsigned char* data = stbi_load("media/brat-album-font.png", &width, &height, &channels, 4);
@@ -62,6 +62,19 @@ void SceneBasic_Uniform::initScene()
     prog.setUniform("FogColor", vec3(0.7f, 0.7f, 0.8f)); // should be greylish blue
     prog.setUniform("FogStart", 0.5f);
     prog.setUniform("FogEnd", 3.0f);
+
+
+    //cube 
+    projection = mat4(1.0f);
+    angle = glm::radians(90.0f);
+    cubeTex = Texture::loadHdrCubeMap("media/pisa-hdr/pisa");
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);//binding
+    //skybox
+    sky = new SkyBox(50.0f);
+
+    
 
     //set the camera and the 3 lights 
     view = glm::lookAt(vec3(3.6f, 0.75f, 0.75f),
@@ -90,6 +103,11 @@ void SceneBasic_Uniform::compile()
 
 		prog.link();
 		prog.use();
+
+        skyProg.compileShader("shader/skybox.vert");
+        skyProg.compileShader("shader/skybox.frag");
+        skyProg.link();
+
 	} catch (GLSLProgramException &e) {
 		cerr << e.what() << endl;
 		exit(EXIT_FAILURE);
@@ -103,18 +121,38 @@ void SceneBasic_Uniform::update( float t )
     //    angle += 0.1f;
       //  if (angle >= 360.0f) angle -= 360.0f;
     //}
+    float deltaT = t - tPrev;
+    if (tPrev == 0.0f) deltaT = 0.0F;
+    tPrev = t;
 
+    angle += rotSpeed * deltaT;
+    if (angle > glm::two_pi<float>())
+        angle -= glm::two_pi<float>();
    
 
 }
 
 void SceneBasic_Uniform::render()
 {
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+    //skybox
+    glDepthMask(GL_FALSE);
+    skyProg.use();
+
+    mat4 viewNoTrans = mat4(mat3(view));
+    mat4 MVP = projection * viewNoTrans;
+
+    skyProg.setUniform("MVP", MVP);
+    skyProg.setUniform("SkyBoxTex", 0);
+    sky->render();
+    glDepthMask(GL_TRUE);
+
+    prog.use();
+
     
     prog.setUniform("UseTexture", 0);
-
     prog.setUniform("Kd", 1.0f, 0.6f, 0.7f);
     prog.setUniform("Ks", 1.0f, 1.0f, 1.0f);
     prog.setUniform("Ka", 0.6f, 0.3f, 0.4f);

@@ -156,6 +156,7 @@
     <ClCompile Include="helper\plane.cpp" />
     <ClCompile Include="helper\skybox.cpp" />
     <ClCompile Include="helper\teapot.cpp" />
+    <ClCompile Include="helper\texture.cpp" />
     <ClCompile Include="helper\torus.cpp" />
     <ClCompile Include="helper\trianglemesh.cpp" />
     <ClCompile Include="main.cpp" />
@@ -166,6 +167,8 @@
     <None Include="shader\basic_uniform.vert" />
     <None Include="shader\PerFragment_phong.frag" />
     <None Include="shader\PerFragment_phong.vert" />
+    <None Include="shader\skybox.frag" />
+    <None Include="shader\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper\aabb.h" />
@@ -182,6 +185,7 @@
     <ClInclude Include="helper\stb\stb_image_write.h" />
     <ClInclude Include="helper\teapot.h" />
     <ClInclude Include="helper\teapotdata.h" />
+    <ClInclude Include="helper\texture.h" />
     <ClInclude Include="helper\torus.h" />
     <ClInclude Include="helper\trianglemesh.h" />
     <ClInclude Include="helper\utils.h" />

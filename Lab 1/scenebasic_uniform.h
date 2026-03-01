@@ -15,15 +15,30 @@
 //lab3 work
 #include "helper/plane.h"
 #include "helper/objmesh.h"
+//skybox
+#include "helper/skybox.h"
+#include "helper/cube.h"
+#include "helper/texture.h"
 
 class SceneBasic_Uniform : public Scene
 {
 private:
+
+    float angle;
+    float tPrev;
+    float rotSpeed;
+
+    //skybox
+    SkyBox* sky;
+    GLSLProgram skyProg;
+    GLuint cubeTex;
     //GLuint vaoHandle; LAB1 LINE
    // Torus torus; 
 
     //texture
     GLuint eyeballTex;
+    //skybox
+  
 
     //lab3 plane and objmesh
     Plane plane; //plane surface
@@ -39,6 +54,7 @@ private:
 
   //  float angle;LAB1 LINE
     //glm::mat4 rotationMatrix;LAB1 LINE
+
 
 
 
