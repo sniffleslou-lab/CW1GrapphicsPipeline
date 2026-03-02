@@ -145,5 +145,8 @@
     <ClInclude Include="helper\texture.h">
       <Filter>helper</Filter>
     </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
